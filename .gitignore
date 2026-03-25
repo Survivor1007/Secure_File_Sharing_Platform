@@ -1,0 +1,12 @@
+# Root .gitignore
+node_modules/
+.env
+dist/
+
+# Frontend (we'll add more later)
+frontend/dist/
+frontend/node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
