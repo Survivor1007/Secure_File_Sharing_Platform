@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - "./backend/uploads:/app/uploads"
+      - "./backend/.env:/app/.env:ro"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+
+  postgres:
+    image: postgres:16-alpine 
+    container_name: postgres_secure_file
+    environment:
+      POSTGRES_USER=: secure_filesuser
+      POSTGRES_PASSWORD: secure_filesuser654
+      POSTGRES_DB: secure_files
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+#Top level volumes
+volumes:
+  postgres_data:
+
+
+    

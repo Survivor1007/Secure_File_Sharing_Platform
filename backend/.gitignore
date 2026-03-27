@@ -42,7 +42,7 @@ uploads/*
 !uploads/.gitkeep
 
 # Docker
-.dockerignore
+
 
 # Temporary files
 tmp/
