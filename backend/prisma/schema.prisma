@@ -1,0 +1,68 @@
+
+
+generator client {
+      provider = "prisma-client-js"
+}
+
+datasource db {
+      provider = "postgres"
+      url = env("DATABASE_URL")
+}
+
+model User { 
+      id    String      @id @default(cuid())
+      email String @unique
+      passwordHash String
+      name  String? 
+      isActive Boolean @default(true)
+      createdAt   DateTime    @default(now())   
+      updatedAt   DateTime    @updatedAt
+
+      files File[]
+      // shareLinks ShareLink[]
+
+      @@map("users")
+}
+
+model File{
+      id    String      @id @default(cuid())
+      userId      String
+      originalName      String
+      storedName  String      @unique
+      mimeType    String
+      checkSum    String?
+      size  BigInt
+      uploadedAt        DateTime    @default(now())
+      isDeleted   Boolean     @default(false)
+      
+      user  User  @relation(fields: [userId],references: [id], onDelete: Cascade)
+
+      shareLinks  ShareLink[]
+
+      @@index([userId])
+      @@index([storedName])
+      @@map("files")
+}
+
+model ShareLink{
+      id    String      @unique @default(cuid())
+      fileId      String
+      passwordHash      String?
+      token       String      @unique
+      expiresAt   DateTime?
+      maxDownloads      Int   @default(10)    
+      downloadCount     Int   @default(0)
+      isActive    Boolean      @default(true)
+      createdAt   DateTime    @default(now())
+
+      file File   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+      @@index([token])
+      @@index([fileId])
+      @@index([expiresAt])
+
+      @@map("share_links")
+
+
+
+}

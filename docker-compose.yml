@@ -1,4 +1,4 @@
-version: '3.9'
+
 
 services:
   backend:
@@ -21,7 +21,7 @@ services:
     image: postgres:16-alpine 
     container_name: postgres_secure_file
     environment:
-      POSTGRES_USER=: secure_filesuser
+      POSTGRES_USER: secure_filesuser
       POSTGRES_PASSWORD: secure_filesuser654
       POSTGRES_DB: secure_files
     ports:
