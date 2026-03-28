@@ -10,8 +10,8 @@ const envSchema = z.object({
       JWT_ACCESS_SECRET:z.string().min(32, "JWT_ACCESS_SECRET must be atleast 32 characters"),
       JWT_REFRESH_SECRET:z.string().min(32, "JWT_REFRESH_SECRET must be atleast 32 characters"),
 
-      ACCESS_TOKEN_EXPIRES_IN:z.string().default("15m"),
-      REFRESH_TOKEN_EXPIRES_IN:z.string().default("7d"),
+      ACCESS_TOKEN_EXPIRES_IN: z.enum(["15m", "30m", "1h"]).default("15m"),
+      REFRESH_TOKEN_EXPIRES_IN: z.enum(["7d", "30d"]).default("7d"),
 
       PORT:z.coerce.number().default(5000),
 
