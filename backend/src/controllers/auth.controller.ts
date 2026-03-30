@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-import { authService, AuthService } from "./auth.service";
+import { authService, AuthService } from "../services/auth.service";
 import { loginSchema, registerSchema } from "../config/validation";
-import { ApiError } from "../types";
-import { error } from "console";
 import { env } from "../config/env";
 
 export class AuthController{

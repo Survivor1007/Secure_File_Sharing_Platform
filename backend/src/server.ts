@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { env } from './config/env';
-import router from './services/auth.routes';
+import router from './routes/auth.routes';
 import { PrismaClient } from '@prisma/client';
 
 

@@ -1,8 +1,9 @@
-import { Prisma, PrismaClient, User } from "@prisma/client";
+import {  PrismaClient, User } from "@prisma/client";
 import argon2 from "argon2";
-import jwt from "jsonwebtoken";
-import {env} from "../config/env";
+
 import { RegisterInput,LoginInput, UserPayload, AuthTokens  } from "../types/index";
+import { JwtService } from "../utils/jwt.utils";
+
 
 const prisma = new PrismaClient();
 
@@ -58,17 +59,15 @@ export class  AuthService{
                   id: user.id,
                   email: user.email,
             };
-
-            const accessToken = jwt.sign(payload, env.JWT_ACCESS_SECRET, {expiresIn:env.ACCESS_TOKEN_EXPIRES_IN});
-
-            const refreshToken = jwt.sign(payload, env.JWT_REFRESH_SECRET, {expiresIn:env.REFRESH_TOKEN_EXPIRES_IN});
-
-            return {accessToken, refreshToken};
+            return {
+                  accessToken: JwtService.generateAccessToken(payload),
+                  refreshToken: JwtService.generateRefreshToken(payload)
+            };
       }
 
       async refreshToken(refreshToken: string):Promise<AuthTokens>{
             try{
-            const payload = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as UserPayload;
+            const payload = JwtService.verifyRefreshToken(refreshToken);
 
             const user = await prisma.user.findUnique({
                   where: {id : payload.id},

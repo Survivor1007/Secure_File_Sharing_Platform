@@ -1,7 +1,13 @@
-export interface UserPayload{
-      id: string;
-      email: string;
-}
+import {z} from 'zod';
+
+export const userPayloadSchema = z.object({
+      id:z.string().cuid(),
+      email:z.string().email(),
+      iat:z.number().optional(),
+      exp:z.number().optional(),
+});
+
+export type UserPayload = z.infer<typeof userPayloadSchema>;
 
 export interface AuthTokens{
       accessToken: string;
