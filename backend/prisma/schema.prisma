@@ -30,7 +30,7 @@ model File{
       originalName      String
       storedName  String      @unique
       mimeType    String
-      checkSum    String?
+      checksum    String?
       size  BigInt
       uploadedAt        DateTime    @default(now())
       isDeleted   Boolean     @default(false)

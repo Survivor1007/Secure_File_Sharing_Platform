@@ -27,3 +27,18 @@ Handles HTTP request and response logic.
 - Zod validation errors → 400 Bad Request
 - Authentication errors → 401 Unauthorized
 - General errors handled gracefully
+
+## File Controller
+
+### Upload
+
+- Checks if user is authenticated
+- Ensures file is provided
+- Calls `fileService.uploadFile`
+- Returns uploaded file metadata
+
+### Get My Files
+
+- Checks if user is authenticated
+- Calls `fileService.getUserFiles`
+- Returns list of user's files

@@ -29,3 +29,17 @@ export interface ApiError extends Error{
       statusCode: number;
       isOperational? : boolean;
 }
+
+export interface FileMetaData {
+      id:string;
+      originalName: string;
+      storedName: string;
+      mimeType: string;
+      size: number;
+      checksum?: string;
+      uploadedAt: Date;
+}
+
+export const uploadFileSchema = z.object({
+
+});
