@@ -42,3 +42,39 @@ Handles HTTP request and response logic.
 - Checks if user is authenticated
 - Calls `fileService.getUserFiles`
 - Returns list of user's files
+
+## Share Controller
+
+### Create Share Link
+
+- Requires authenticated user
+- Validates `fileId`
+- Accepts optional:
+  - `expiresAt`
+  - `maxDownloads` (default: 10)
+  - `password`
+- Calls `shareService.createShareLink`
+- Returns generated share link
+
+---
+
+### Download File
+
+- Public endpoint (no authentication required)
+- Validates token from params
+- Calls `shareService.validateAndDownload`
+- Checks:
+  - token validity
+  - expiration
+  - download limits
+- Streams file to client
+
+---
+
+### Get My Share Links
+
+- Requires authenticated user
+- Calls `shareService.getMyShareLinks`
+- Returns user's created share links
+
+---

@@ -49,3 +49,49 @@ Defines API endpoints and maps them to controllers.
 - File validation handled in upload middleware
 - Users can only access their own files
 - Service layer handles storage + DB logic
+
+## Routes
+
+### POST /create
+
+- Middleware:
+  - `authenticateToken`
+- Controller:
+  - `shareController.createShareLink`
+
+---
+
+### GET /download/:token
+
+- Public route
+- Controller:
+  - `shareController.downloadFile`
+
+---
+
+### GET /my-links
+
+- Middleware:
+  - `authenticateToken`
+- Controller:
+  - `shareController.getMyShareLinks`
+
+---
+
+## Error Handling
+
+- Missing user → 401 Unauthorized
+- Missing fileId → 400 Bad Request
+- Invalid/expired token → handled in service
+- File not found → 404 Not Found
+- Stream errors → 500 Internal Server Error
+- General errors → 400 / 500 responses
+
+---
+
+## Notes
+
+- Token-based access for secure downloads
+- File streaming used for efficient downloads
+- Download limits and expiration enforced in service layer
+- File path resolved from local `/uploads` directory

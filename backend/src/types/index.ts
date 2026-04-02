@@ -43,3 +43,19 @@ export interface FileMetaData {
 export const uploadFileSchema = z.object({
 
 });
+
+export interface ShareLinkInput{
+      fileId: string;
+      expiresAt? : Date;
+      maxDownloads?: number;
+      password?:string;
+}
+
+export interface ShareLinkResponse{
+      id: string;
+      token: string;
+      shareUrl: string;
+      maxDownloads: number;
+      expiresAt? : Date;
+      downloadCount: number;
+}

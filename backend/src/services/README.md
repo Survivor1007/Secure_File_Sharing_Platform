@@ -40,3 +40,60 @@ The `AuthService` is responsible for:
 - No password data is ever returned
 - Token secrets are stored in environment variables
 
+## Share Service
+
+The `ShareService` is responsible for secure file sharing and controlled downloads.
+
+### Create Share Link
+
+- Verifies file ownership (user can only share their own files)
+- Generates secure random token
+- Optionally hashes password using argon2
+- Sets:
+  - expiration date
+  - max download limit
+- Stores share link in database
+- Returns shareable URL
+
+---
+
+### Validate and Download
+
+- Fetches share link using token
+- Checks:
+  - token validity
+  - expiration
+  - download limit
+- Increments download count
+- Verifies file exists on disk
+- Returns file metadata for streaming
+
+---
+
+### Get My Share Links
+
+- Fetches all active share links for user's files
+- Includes file metadata
+- Orders by latest created
+- Adds derived fields:
+  - `isExpired`
+  - formatted `shareUrl`
+
+---
+
+### Token Handling
+
+- Uses `crypto.randomBytes` for secure token generation
+- Tokens are unique and hard to guess
+- Used for public file access (`/download/:token`)
+
+---
+
+## Security Notes (Share)
+
+- File ownership is strictly enforced
+- Tokens are random and unguessable
+- Password protection supported (hashed with argon2)
+- Download limits prevent abuse
+- Expiration adds time-based control
+- File existence verified before download

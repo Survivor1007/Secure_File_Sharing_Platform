@@ -9,6 +9,8 @@ import { PrismaClient } from '@prisma/client';
 
 import authRoutes from './routes/auth.routes';
 import fileRoutes from './routes/file.routes';
+import shareRoutes from './routes/share.routes';
+
 
 const app = express();
 const prisma = new PrismaClient({
@@ -26,6 +28,7 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/files', fileRoutes);   // ← New file routes
+app.use('/api/share', shareRoutes);
 
 // Health check
 app.get('/api/health', async (req, res) => {
