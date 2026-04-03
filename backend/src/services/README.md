@@ -33,12 +33,77 @@ The `AuthService` is responsible for:
 - Fetches user from database
 - Issues new tokens
 
+### Change Password
+
+- Fetches user by ID
+- Verifies current password using argon2
+- Hashes new password (argon2id)
+- Updates password in database
+
+---
+
+## Security Notes (Auth - Password)
+
+- Current password must be verified before update
+- Passwords are always hashed (never stored in plain text)
+- Prevents unauthorized password changes
+
 ## Security Notes
 
 - Passwords are hashed using argon2id
 - Tokens contain minimal payload (id, email)
 - No password data is ever returned
 - Token secrets are stored in environment variables
+
+
+
+## File Service
+
+The `FileService` is responsible for handling file uploads and retrieving user files.
+
+### Upload File
+
+- Reads uploaded file from disk
+- Generates file checksum (SHA-256)
+- Stores file metadata in database:
+  - original name
+  - stored name
+  - MIME type
+  - size
+  - checksum
+- Associates file with user
+- Returns file metadata
+
+---
+
+### Get User Files
+
+- Fetches all non-deleted files for user
+- Orders by latest uploaded
+- Returns selected file metadata:
+  - id
+  - original name
+  - MIME type
+  - size
+  - checksum
+  - upload time
+
+---
+
+### File Handling
+
+- Files stored in `/uploads` directory
+- Unique stored filenames used (handled in upload middleware)
+- Checksum used for integrity verification
+
+---
+
+## Security Notes (File)
+
+- Files linked to authenticated user only
+- Soft delete supported (`isDeleted`)
+- No direct file access without authorization
+- Checksum helps detect file tampering
 
 ## Share Service
 

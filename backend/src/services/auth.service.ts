@@ -1,8 +1,9 @@
 import {  PrismaClient, User } from "@prisma/client";
 import argon2 from "argon2";
 
-import { RegisterInput,LoginInput, UserPayload, AuthTokens  } from "../types/index";
+import { RegisterInput,LoginInput, UserPayload, AuthTokens, ChangeInputPassword  } from "../types/index";
 import { JwtService } from "../utils/jwt.utils";
+
 
 
 const prisma = new PrismaClient();
@@ -81,7 +82,35 @@ export class  AuthService{
             }catch(error){
                   throw new Error('Invalid or expired refresh tokens');
             }
-      }  
+      } 
+      
+      async changePassword(userId: string, data:ChangeInputPassword): Promise<void>{
+            const user = await prisma.user.findUnique({
+                  where:{id : userId},
+            });
+
+            if(!user){
+                  throw new Error('User not found');
+            }
+
+            // Verify current password
+            const isValid = await argon2.verify(user.passwordHash, data.currentPassword);
+            if(!isValid){
+                  throw new Error('Current Password is not correct');
+            }
+
+            const newPasswordHash = await argon2.hash(data.newPassword, {
+                  type: argon2.argon2id,
+                  memoryCost: 65536,
+                  timeCost: 3,
+                  parallelism: 4,
+            });
+
+            await prisma.user.update({
+                  where: {id : userId},
+                  data: {passwordHash: newPasswordHash},
+            });
+      }
 }
 
 export const authService = new AuthService();

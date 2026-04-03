@@ -3,6 +3,9 @@ node_modules/
 .env
 dist/
 
+# Root .gitignore - 
+backend/logs/
+
 # Frontend (we'll add more later)
 frontend/dist/
 frontend/node_modules/

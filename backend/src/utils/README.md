@@ -63,3 +63,44 @@ The `JwtService` centralizes all JWT-related logic.
 - Centralized token logic
 - Strong type safety
 - Reusable across services and middleware
+
+# Logger Utility (Audit Log)
+
+Handles audit logging for important system actions.
+
+## Responsibilities
+
+- Record user actions (e.g., login, file upload, password change)
+- Store logs in file system
+- Include metadata like timestamp, userId, and IP
+
+---
+
+## Audit Log
+
+### auditLog(action, userId, details)
+
+- Creates structured log entry
+- Fields:
+  - timestamp
+  - action
+  - userId
+  - ip (optional)
+  - additional details
+- Appends log to `logs/audit.log`
+
+---
+
+## Log Storage
+
+- Logs stored in `/logs/audit.log`
+- Directory created automatically if not present
+- Each log entry stored as JSON line
+
+---
+
+## Notes
+
+- Useful for debugging and security auditing
+- Helps track user activity
+- Can be extended to external logging systems (e.g., ELK, cloud logging)

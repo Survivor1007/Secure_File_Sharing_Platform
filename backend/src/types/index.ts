@@ -59,3 +59,8 @@ export interface ShareLinkResponse{
       expiresAt? : Date;
       downloadCount: number;
 }
+
+export interface ChangeInputPassword{
+      currentPassword: string;
+      newPassword: string;
+}

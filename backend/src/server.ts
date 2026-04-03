@@ -30,12 +30,12 @@ const PORT = env.PORT;
 app.use(helmet({
   contentSecurityPolicy:{
     directives:{
-      defaultSrc:["self"],
-      scriptSrc:["self"],
+      defaultSrc:["'self'"],
+      scriptSrc:["'self'"],
     },
   },
 }));
-app.use(cors({origin: process.env.NODE_ENV === 'production' ? false : '*'}));
+app.use(cors({origin: env.NODE_ENV === 'production' ? false : 'http://localhost:5173',credentials:true}));
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
@@ -59,6 +59,7 @@ app.get('/api/health', async (req, res) => {
       status: 'OK',
       environment: env.NODE_ENV,
       database: 'Connected ✅',
+      version:'1.0.0',
       message: 'Secure File Sharing Backend is healthy!',
     });
   } catch (error) {

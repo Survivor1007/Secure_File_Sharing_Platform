@@ -22,6 +22,51 @@ Handles HTTP request and response logic.
 - Sets refresh token in HTTP-only cookie
 - Returns access token
 
+### Logout
+
+- Clears refresh token cookie
+- Removes client session
+- Returns success response
+
+---
+
+### Refresh Token
+
+- Reads refresh token from HTTP-only cookie
+- Validates token via `AuthService.refreshToken`
+- Issues:
+  - new access token
+  - new refresh token (rotated)
+- Sets new refresh token in cookie
+- Returns new access token
+
+---
+
+
+### Change Password
+
+- Requires authenticated user
+- Validates:
+  - current password
+  - new password
+- Calls `AuthService.changePassword`
+- Returns success response
+
+---
+
+
+
+## Security Notes (Auth - Password)
+
+- Current password must be verified before update
+- New password is always hashed (never stored in plain text)
+- Prevents unauthorized password changes
+
+## Error Handling (Auth - Tokens)
+
+- Missing refresh token → 401 Unauthorized
+- Invalid refresh token → 401 Unauthorized
+
 ## Error Handling
 
 - Zod validation errors → 400 Bad Request

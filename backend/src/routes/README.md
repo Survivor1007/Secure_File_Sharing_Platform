@@ -6,14 +6,20 @@ Defines API endpoints and maps them to controllers.
 
 - POST /register → User registration
 - POST /login → User login
+- POST /refresh → Refresh Token
+- POST /logout → Logs out user
+- POST /change-password → Change password 
 
 ## Responsibilities
 
 - Route incoming HTTP requests
 - Delegate handling to controllers
 - Keep routing logic minimal and clean
+- Refresh token 
+- Log out user 
+- Changing the user password
 
-## Routes
+## File Routes
 
 ### POST /upload
 
@@ -50,7 +56,7 @@ Defines API endpoints and maps them to controllers.
 - Users can only access their own files
 - Service layer handles storage + DB logic
 
-## Routes
+## Share Routes
 
 ### POST /create
 

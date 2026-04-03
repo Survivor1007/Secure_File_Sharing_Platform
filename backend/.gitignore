@@ -47,3 +47,10 @@ uploads/*
 # Temporary files
 tmp/
 temp/
+
+# Logs
+logs/
+*.log
+
+# Audit logs specifically
+logs/audit.log

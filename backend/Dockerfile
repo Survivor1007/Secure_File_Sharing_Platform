@@ -44,7 +44,7 @@ COPY --from=builder /app/prisma ./prisma
 
 
 #Create the uploads folder 
-RUN mkdir -p uploads prisma/migrations && \
+RUN mkdir -p uploads logs prisma/migrations && \
  chown -R node:node /app && \
  chmod -R 755 prisma
 

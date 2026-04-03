@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { authService, AuthService } from "../services/auth.service";
 import { loginSchema, registerSchema } from "../config/validation";
 import { env } from "../config/env";
+import { error } from "console";
+import { auditLog } from "../utils/logger";
 
 export class AuthController{
       async register(req:Request, res:Response){
@@ -86,7 +88,39 @@ export class AuthController{
                         accessToken: tokens.accessToken,
                   });
             }catch(error: any){
-                  res.status(401).json({success:true, message:'Refresh token invalid'});
+                  res.status(401).json({success:false, message:'Refresh token invalid'});
+            }
+      }
+
+      async changePassword(req: Request, res: Response){
+            try{
+                  if(!req.user){
+                        res.status(401).json({
+                              success: false,
+                              message: 'Unauthorized',
+                        });
+                        return;
+                  }
+
+                  const {currentPassword, newPassword} = req.body;
+                  if(!currentPassword || !newPassword){
+                        res.status(401).json({
+                              success:false,
+                              message: 'Both current and new password are required',
+                        });
+                        return;
+                  }
+
+                  await authService.changePassword(req.user.id, {currentPassword, newPassword});
+
+                  await auditLog('PASSWORD_CHANGE', req.user.id, { ip: req.ip });
+                  
+                  res.status(200).json({
+                        success:true,
+                        message: 'Password changes successfully',
+                  });
+            }catch(error : any){
+                  res.status(400).json({success: false, message:error.message});
             }
       }
 }
