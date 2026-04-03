@@ -49,6 +49,46 @@ export class AuthController{
                   res.status(401).json({success:false, message:error.message})
             }
       }
+
+      async logout(req: Request, res: Response){
+            res.clearCookie('refreshToken',{
+                  httpOnly:true,
+                  secure: process.env.NODE_ENV === 'production',
+                  sameSite:'strict',
+            });
+
+            res.json({success: true, message:'Logged out successfully'});
+      }
+
+      async refresh(req: Request, res: Response){
+            try{
+                  const refreshToken = req.cookies.refreshToken;
+
+                  if(!refreshToken){
+                        res.status(401).json({
+                              success:false,
+                              message:'Refresh Token Missing'
+                        });
+                        return;
+                  }
+
+                  const tokens = await authService.refreshToken(refreshToken);
+
+                  res.cookie('refreshToken', tokens.refreshToken,({
+                        httpOnly:true,
+                        secure:process.env.NODE_ENV === 'production',
+                        sameSite:'strict',
+                        maxAge:7 * 24 * 60 * 60 * 1000,
+                  }));
+
+                  res.json({
+                        success:true,
+                        accessToken: tokens.accessToken,
+                  });
+            }catch(error: any){
+                  res.status(401).json({success:true, message:'Refresh token invalid'});
+            }
+      }
 }
 
 export const authController =  new AuthController();  
