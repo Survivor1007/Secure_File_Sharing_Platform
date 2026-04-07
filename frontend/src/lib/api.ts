@@ -1,12 +1,19 @@
 const API_BASE = '/api';
 
+let currentAccessToken: string | null = null;
+
+export const  setAccessToken = (token : string | null) => {
+  currentAccessToken = token;
+}
+
 export const fetchClient = async (endpoint:string, options: RequestInit = {}) => {
-        const token = localStorage.getItem('accessToken');
+        
+      const isFormData = options.body instanceof FormData;
 
       const config: RequestInit = {
             headers:{
-                  'Content-Type':'application/json',
-                  ...(token && { Authorization: `Bearer ${token}` }),
+              ...(!isFormData && {'Content-Type':'application/json'}),
+                  ...(currentAccessToken && { Authorization: `Bearer ${currentAccessToken}` }),
             },
             credentials: 'include',  //For httpOnly Cookie
             ...options,
@@ -14,19 +21,35 @@ export const fetchClient = async (endpoint:string, options: RequestInit = {}) =>
 
       const response = await fetch(`${API_BASE}${endpoint}`, config);
 
-      if(response.status=== 403){
-            const refreshed = await refreshAccessToken();
-            if(refreshed){
-                return   fetchClient(endpoint, options);
-            }
-      }     
+      if(response.status === 401 || response.status=== 403){
+            try{
+              const refreshRes = await fetch('/api/auth/refresh', {
+                method: 'POST',
+                credentials: 'include',
+              });
+
+              if(refreshRes.ok){
+                const refreshData = await refreshRes.json();
+                setAccessToken(refreshData.accessToken);
+
+                return fetchClient(endpoint, options);
+              }
+            }catch {}
+      }
+          
 
       if(!response.ok){
             const errorData= await response.json().catch(() => ({}));
             throw new Error(errorData.message || 'Request Data');
       }
 
-      return response.json();
+      const data = await response.json();
+
+      if(data.accessToken){
+        setAccessToken(data.accessToken);
+      }
+
+      return data;
 };
 
 const refreshAccessToken = async (): Promise<boolean> => {

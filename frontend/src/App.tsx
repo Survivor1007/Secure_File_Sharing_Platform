@@ -3,7 +3,7 @@ import { useAuth } from "./context/AuthContext";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Dashboard from "./pages/auth/Dashboard";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 function App(){
   const {isAuthenticated, isLoading}  = useAuth();

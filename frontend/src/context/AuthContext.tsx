@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext,useContext, type ReactNode } from "react";
 import fetchClient from "../lib/api";
 import {type RegisterData, type  User } from "../types";
-
+import { setAccessToken } from "../lib/api";
 
 interface AuthContextType{
       user: User | null;
@@ -17,6 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({children}: {children : ReactNode}) => {
       const [user, setUser] = useState<User | null>(null);
       const [isLoading, setIsLoading] = useState(true);
+      
 
       useEffect(() => {
             const restoreSession = async () => {
@@ -25,11 +26,12 @@ export const AuthProvider = ({children}: {children : ReactNode}) => {
                               method:'POST',
                         });
                         if(data.accessToken){
-
+                              setAccessToken(data.accessToken);
                               setUser({id:'temp', email: 'user@example.com'});
                         }
                   }catch(err){
                         setUser(null);
+                        setAccessToken(null);
                   }finally{
                         setIsLoading(false);
                   }
@@ -43,7 +45,12 @@ export const AuthProvider = ({children}: {children : ReactNode}) => {
                   method: 'POST',
                   body:JSON.stringify({email, password}),
             });
-            setUser({id: 'temp', email});
+            
+            if(data.accessToken){
+                  setAccessToken(data.accessToken);
+                  setUser({id: 'temp', email});
+            }
+            
       };
 
       const register = async (data: RegisterData) => {
@@ -60,6 +67,7 @@ export const AuthProvider = ({children}: {children : ReactNode}) => {
                   console.error('Logout error:', err);
             }
             setUser(null);
+            setAccessToken(null);
       };
 
       return (
