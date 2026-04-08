@@ -2,10 +2,14 @@ import { Download, FileText, Share2, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import fetchClient from "../../lib/api";
 import { type FileItem } from "../../types";
+import ShareModal from "./ShareModal";
+
 
 const FileList = () => {
       const [files, setFiles] = useState<FileItem[]>([]);
       const [loading, setLoading] = useState(true);
+      const [selectedFileForShare, setSelectedFileForShare ] = useState<{id: string, name: string} | null>(null);
+
 
       const fetchFiles = async () => {
             try{
@@ -32,6 +36,11 @@ const FileList = () => {
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
       }
 
+      const handleShare= (fileId: string, fileName: string) =>{
+        setSelectedFileForShare({id: fileId, name: fileName});
+      }
+
+
       if(loading){
             return <div className="text-center py-12 text-gray-400">Loading your files...</div>
       }
@@ -46,12 +55,13 @@ const FileList = () => {
       }
 
       return (
-    <div className="card">
+    <>
+      <div className="card overflow-hidden">
       <div className="p-6 border-b border-gray-800 flex justify-between items-center">
         <h3 className="text-xl font-semibold">My Files ({files.length})</h3>
         <button 
           onClick={fetchFiles}
-          className="text-sm text-blue-400 hover:text-blue-500"
+            className="text-sm text-blue-400 hover:text-blue-500 font-medium"
         >
           Refresh
         </button>
@@ -59,34 +69,52 @@ const FileList = () => {
 
       <div className="divide-y divide-gray-800">
         {files.map((file) => (
-          <div key={file.id} className="p-6 flex items-center justify-between hover:bg-gray-900/50 transition-colors">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-gray-800 rounded-xl flex items-center justify-center">
-                <FileText size={22} className="text-gray-400" />
+            <div 
+              key={file.id} 
+              className="p-6 flex items-center justify-between hover:bg-gray-900/50 group transition-colors"
+            >
+              <div className="flex items-center gap-4 flex-1 min-w-0">
+                <div className="w-11 h-11 bg-gray-800 rounded-2xl flex-shrink-0 flex items-center justify-center">
+                  <FileText size={24} className="text-gray-400" />
               </div>
-              <div>
-                <p className="font-medium text-white truncate max-w-md">{file.originalName}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-white truncate">{file.originalName}</p>
                 <p className="text-sm text-gray-500">
                   {formatFileSize(file.size)} • {new Date(file.uploadedAt).toLocaleDateString()}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <button className="p-2 hover:bg-gray-800 rounded-lg transition-colors">
-                <Share2 size={20} className="text-gray-400 hover:text-white" />
+              <div className="flex items-center gap-2 opacity-70 group-hover:opacity-100 transition-opacity">
+                <button 
+                  onClick={() => handleShare(file.id, file.originalName)}
+                  className="p-3 hover:bg-gray-800 rounded-xl transition-colors"
+                  title="Share"
+                >
+                  <Share2 size={20} />
               </button>
-              <button className="p-2 hover:bg-gray-800 rounded-lg transition-colors">
-                <Download size={20} className="text-gray-400 hover:text-white" />
+                <button className="p-3 hover:bg-gray-800 rounded-xl transition-colors" title="Download">
+                  <Download size={20} />
               </button>
-              <button className="p-2 hover:bg-red-900/30 rounded-lg transition-colors">
-                <Trash2 size={20} className="text-red-400" />
+                <button className="p-3 hover:bg-red-900/30 text-red-400 rounded-xl transition-colors" title="Delete">
+                  <Trash2 size={20} />
               </button>
             </div>
           </div>
         ))}
       </div>
     </div>
+
+      {/* Share Modal */}
+      {selectedFileForShare && (
+        <ShareModal
+          fileId={selectedFileForShare.id}
+          fileName={selectedFileForShare.name}
+          isOpen={true}
+          onClose={() => setSelectedFileForShare(null)}
+        />
+      )}
+    </>
   );
 
 
