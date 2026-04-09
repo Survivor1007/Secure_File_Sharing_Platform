@@ -64,6 +64,30 @@ export class FileService{
 
             }));
       }
+
+      async downloadOwnFile(fileId: string, userId: string){
+            const file = await prisma.file.findUnique({
+                  where:{
+                        id: fileId,
+                        userId,
+                        isDeleted: false,
+                  },
+            });
+
+            if(!file){
+                  throw new Error('File not found or access denied');
+            }
+
+            const filePath = path.join(process.cwd(), 'uploads', file.storedName);
+
+            return {
+                  filePath,
+                  originalName:file.originalName,
+                  mimeType: file.mimeType,
+                  size: file.size
+            };
+
+      }
 }
 
 export const fileservice = new FileService();

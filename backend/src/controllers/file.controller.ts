@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import { fileservice } from '../services/file.service';
 import { authenticateToken } from '../middleware/auth.middleware';
-
+import fs from 'fs';
 export class FileController {
   async upload(req: Request, res: Response) {
     try {
@@ -48,6 +48,38 @@ export class FileController {
       });
     } catch (error: any) {
       res.status(500).json({ success: false, message: 'Failed to fetch files' });
+    }
+  }
+
+  async downloadOwnFile(req: Request, res: Response){
+    try{
+      if(!req.user){
+        return res.status(401).json({success:false, message: 'Unauthorized'});
+      }
+
+      const {fileId} = req.params;
+
+      const fileData = await fileservice.downloadOwnFile(fileId, req.user.id);
+      
+      res.setHeader('Content-Type', fileData.mimeType);
+      res.setHeader('COntent-Disposition', `attachment;filename="${fileData.originalName}"`);
+      res.setHeader('Content-Length', fileData.size.toString());
+
+      const fileStream = fs.createReadStream(fileData.filePath);
+
+      fileStream.on('error', (error: any) => {
+        console.error('Download stream error:', error);
+        if(!res.headersSent){
+          res.status(500).json({success: false, message: 'Error downloading file'});
+        }
+      });
+
+      fileStream.pipe(res);
+    }catch(error: any){
+      console.error('Download own file error:', error);
+      if(!res.headersSent){
+        res.status(404).json({success: false, message: error.message || 'File not found'});
+      }
     }
   }
 }
