@@ -2,6 +2,7 @@ import { Calendar, Check, Copy, Download, Share2, X } from "lucide-react";
 import React, { useState } from "react";
 import fetchClient from "../../lib/api";
 
+
 interface ShareModalProps{
       fileId: string;
       fileName: string;
@@ -18,7 +19,7 @@ const ShareModal = ({fileId, fileName, isOpen, onClose}: ShareModalProps) => {
 
       if(!isOpen)return null;
 
-      const createShareLink = async () => {
+      const createshareUrl = async () => {
             setLoading(true);
 
             try{
@@ -128,7 +129,7 @@ const ShareModal = ({fileId, fileName, isOpen, onClose}: ShareModalProps) => {
                   onClick={onClose}
                   className="flex-1 bg-gray-700 hover:bg-gray-600 py-3 rounded-2xl font-medium transition-colors"
                 >
-                  Close
+                  Done
                 </button>
               </div>
 
