@@ -28,11 +28,12 @@ const ShareModal = ({fileId, fileName, isOpen, onClose}: ShareModalProps) => {
                         body: JSON.stringify({
                               fileId, 
                               expiresAt: new Date(Date.now() + parseInt(expiresIn) * 24 * 60 * 60 * 1000).toISOString(),
-                              mexDownloads: parseInt(maxDownloads),
+                              maxDownloads: parseInt(maxDownloads),
                         }),
                   });
 
                   setShareUrl(data.shareLink.shareUrl);
+                  alert('New share link created! All previous links have been disabled');
             }catch(err: any){
                   alert(err.message || 'Failed to create the share link');
             }finally{
