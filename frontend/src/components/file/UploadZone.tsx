@@ -120,9 +120,11 @@ const UploadZone = () => {
 
       {message && (
         <div className={`mt-6 p-4 rounded-2xl text-sm ${
-          message.type === 'success' ? 'bg-green-900/50 text-green-400' : 'bg-red-900/50 text-red-400'
+          message.type === 'success' 
+          ? 'bg-green-900/50 text-green-400 border border-green-700' 
+          : 'bg-red-900/50 text-red-400 border border-red-700'
         }`}>
-          {message.text}
+          {message.type === 'success' ? '✅' : '⚠️'}{message.text}
         </div>
       )}
     </div>

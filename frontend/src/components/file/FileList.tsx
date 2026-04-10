@@ -13,6 +13,7 @@ const FileList = () => {
         name: string
       } | null>(null);
       const [downloadingId, setDownloadingId] = useState<string | null>(null);
+      const [deletingId, setDeleteingId] = useState<string | null>(null);
 
       const fetchFiles = async () => {
             try{
@@ -64,6 +65,23 @@ const FileList = () => {
         }
       };
 
+      const handleDelete = async (fileId: string) => {
+        if(!confirm('Are you sure you want to delete this file? This action cannot be undone.')){
+          return;
+        }
+
+        setDeleteingId(fileId);
+
+        try{
+          await fetchClient(`/files/delete/${fileId}`, {method: 'DELETE'});
+          setFiles(files.filter(f => f.id !== fileId));
+          alert('File deleted successfully');
+        }catch(err: any){
+          alert(err.message || 'Failed to delete file');
+        }finally{
+          setDeleteingId(null);
+        }
+      };
       
 
       if(loading){
@@ -128,7 +146,12 @@ const FileList = () => {
                   <Download size={20} className={downloadingId === file.id ? "animate-pulse" : ""} />
                 </button>
 
-                <button className="p-3 hover:bg-red-900/30 text-red-400 rounded-xl transition-colors" title="Delete">
+                <button 
+                  onClick={() => handleDelete(file.id)}
+                  className="p-3 hover:bg-red-900/30 text-red-400 rounded-xl transition-colors" 
+                  title="Delete"
+                  >
+
                   <Trash2 size={20} />
                 </button>
               </div>

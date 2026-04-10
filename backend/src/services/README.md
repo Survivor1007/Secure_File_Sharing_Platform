@@ -112,6 +112,7 @@ The `ShareService` is responsible for secure file sharing and controlled downloa
 ### Create Share Link
 
 - Verifies file ownership (user can only share their own files)
+- Disables all currently active links of the file
 - Generates secure random token
 - Optionally hashes password using argon2
 - Sets:

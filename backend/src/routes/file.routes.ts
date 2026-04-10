@@ -17,5 +17,6 @@ router.post(
 
 router.get('/my-files', authenticateToken, fileController.getMyFiles);
 router.get('/download/:fileId', authenticateToken, fileController.downloadOwnFile);
+router.delete('/delete/:fileId', authenticateToken, fileController.deleteFile);
 
 export default router;

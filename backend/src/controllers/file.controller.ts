@@ -82,6 +82,22 @@ export class FileController {
       }
     }
   }
+
+  async deleteFile(req: Request, res: Response){
+    try{
+      if(!req.user){
+        return res.status(401).json({success:false, message: 'Unauthorized'});
+      }
+
+
+      const {fileId}  = req.params;
+      await fileservice.deleteFile(fileId, req.user.id);
+
+      res.json({success: true, message:'File deleted successfully'});
+    }catch(err: any){
+      res.status(400).json({success:false, message: err.message});
+    }
+  }
 }
 
 export const fileController = new FileController();

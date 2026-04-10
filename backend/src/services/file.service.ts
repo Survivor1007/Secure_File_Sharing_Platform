@@ -88,6 +88,28 @@ export class FileService{
             };
 
       }
+
+      async deleteFile(fileId: string, userId: string): Promise<void>{
+            const file = await prisma.file.findUnique({
+                  where:{id: fileId,userId}
+            });
+
+            if(!file){
+                  throw new Error("File not found or access denied");
+            }
+
+            await prisma.file.update({
+                  where: {id:fileId},
+                  data:{isDeleted:true},
+            });
+
+            try{
+                  const filepath = path.join(process.cwd(), 'uploads', file.storedName);
+                  await fs.unlink(filepath);
+            }catch(err){
+                  console.error('Failed to delete physical file', err);
+            }
+      }
 }
 
 export const fileservice = new FileService();
