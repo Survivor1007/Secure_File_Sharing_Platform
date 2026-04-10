@@ -12,6 +12,8 @@ const UPLOAD_DIR = path.join(process.cwd(), '/uploads');
 
 export class ShareService{
       async createShareLink(userId: string, data: ShareLinkInput): Promise<ShareLinkResponse>{
+
+            //Verify the file belongs to the user
             const file = await prisma.file.findUnique({
                   where: {id: data.fileId},
             });
@@ -20,6 +22,18 @@ export class ShareService{
                   throw new Error('File not found or access denied');
             }
 
+            //Deactive all other links
+            await prisma.shareLink.updateMany({
+                  where:{
+                        fileId: data.fileId,
+                        isActive:true,
+                  },
+                  data:{
+                        isActive:false,
+                  },
+            });
+
+            
             const token = crypto.randomBytes(32).toString('hex');
             let passwordHash: string | null = null;
 
