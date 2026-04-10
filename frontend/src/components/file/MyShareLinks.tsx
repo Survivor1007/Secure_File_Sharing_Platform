@@ -1,12 +1,15 @@
-import { Calendar, Check, Copy, Download, Trash2 } from "lucide-react";
+import { Calendar, Check, Copy,  Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import fetchClient from "../../lib/api";
 import { type ShareLink } from "../../types";
+import Skeleton from "../ui/Skeleton";
+
 
 const MyShareLinks = () => {
       const [shareLinks, setShareLinks] = useState<ShareLink[]>([]);
       const [loading, setLoading] = useState(true);
       const [copiedId,setCopiedId] = useState<string | null>(null);
+      const [revokingId,setRevokingId] = useState<string | null>(null);
 
       const fetchShareLinks = async () => {
             try{
@@ -40,17 +43,44 @@ const MyShareLinks = () => {
 
       const handleRevoke = async (shareId: string) => {
         if(!confirm('Are you sure you want to revoke this shareLink?'))return;
+
+        setRevokingId(shareId);
       try{
         await fetchClient(`/share/revoke/${shareId}`, {method:'POST'});
         setShareLinks(shareLinks.filter(link => link.id !== shareId));
         alert('Share Link revoked successdully');
       }catch(err: any){
         alert(err.message || 'Failed to revoke share link');
+      }finally{
+        setRevokingId(null);
       }
     };
 
-      if(loading){
-            return <div className="text-center py-12 text-gray-400">Loading your share Links...</div>
+      if (loading) {
+        return (
+          <div className="card overflow-hidden">
+            <div className="p-6 border-b border-gray-800">
+              <h3 className="text-xl font-semibold">My Share Links</h3>
+            </div>
+            <div className="divide-y divide-gray-800">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="p-6">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1 space-y-3">
+                      <Skeleton className="h-5 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
+                    <div className="flex gap-3">
+                      <Skeleton className="w-10 h-10 rounded-xl" />
+                      <Skeleton className="w-10 h-10 rounded-xl" />
+                    </div>
+                  </div>
+                  <Skeleton className="h-20 mt-4 rounded-2xl" />
+                </div>
+              ))}
+            </div>
+          </div>
+        );
       }
 
       if(shareLinks.length === 0){
@@ -91,21 +121,31 @@ const MyShareLinks = () => {
                 )}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <button
                   onClick={() => copyLink(link.shareUrl, link.id)}
                   className="p-3 hover:bg-gray-800 rounded-xl transition-colors"
                   title="Copy Link"
                 >
-                  {copiedId === link.id ? <Check size={20} className="text-green-400" /> : <Copy size={20} />}
+                  {copiedId === link.id ? (
+                    <Check size={20} className="text-green-400" />
+                  ) : (
+                    <Copy size={20} />
+                  )}
                 </button>
-                <button className="p-3 hover:bg-red-900/30 text-red-400 rounded-xl transition-colors" title="Delete Link">
+
+                <button 
+                  onClick={() => handleRevoke(link.id)}
+                  disabled={revokingId === link.id}
+                  className="p-3 hover:bg-red-900/30 text-red-400 rounded-xl transition-colors disabled:opacity-50"
+                  title="Revoke Link"
+                >
                   <Trash2 size={20} />
                 </button>
               </div>
             </div>
 
-            <div className="mt-4 bg-gray-900 p-3 rounded-2xl font-mono text-xs break-all text-blue-400">
+            <div className="mt-4 bg-gray-900 p-4 rounded-2xl font-mono text-xs break-all text-blue-400 border border-gray-700">
               {link.shareUrl}
             </div>
           </div>

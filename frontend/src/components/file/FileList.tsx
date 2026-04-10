@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import fetchClient, { downloadFile } from "../../lib/api";
 import { type FileItem } from "../../types";
 import ShareModal from "./ShareModal";
+import Skeleton from "../ui/Skeleton";
+
 
 
 const FileList = () => {
@@ -84,15 +86,38 @@ const FileList = () => {
       };
       
 
-      if(loading){
-            return <div className="text-center py-12 text-gray-400">Loading your files...</div>
+      if (loading) {
+        return (
+          <div className="card overflow-hidden">
+            <div className="p-6 border-b border-gray-800">
+              <h3 className="text-xl font-semibold">My Files</h3>
+            </div>
+            <div className="divide-y divide-gray-800">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="p-6 flex items-center gap-4">
+                  <Skeleton className="w-11 h-11 rounded-2xl" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                  <div className="flex gap-3">
+                    <Skeleton className="w-10 h-10 rounded-xl" />
+                    <Skeleton className="w-10 h-10 rounded-xl" />
+                    <Skeleton className="w-10 h-10 rounded-xl" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
       }
 
       if(files.length === 0){
             return (
                   <div className="card p-12 text-center">
                         <FileText className="mx-auto mb-4 text-gray-500" size= {48}/>
-                        <p className="text-gray-400">No files uploaded yet</p>
+                        <p className="text-gray-400 text-lg">No files uploaded yet</p>
+                        <p className="text-gray-500 mt-2">Upload your first file to get started</p>
                   </div>
             );
       }
@@ -148,10 +173,10 @@ const FileList = () => {
 
                 <button 
                   onClick={() => handleDelete(file.id)}
-                  className="p-3 hover:bg-red-900/30 text-red-400 rounded-xl transition-colors" 
+                  disabled={deletingId === file.id}
+                  className="p-3 hover:bg-red-900/30 text-red-400 rounded-xl transition-colors disabled:opacity-50"
                   title="Delete"
-                  >
-
+                >
                   <Trash2 size={20} />
                 </button>
               </div>
