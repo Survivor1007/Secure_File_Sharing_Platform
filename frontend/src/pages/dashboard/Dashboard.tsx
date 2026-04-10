@@ -1,13 +1,22 @@
-import React from "react";
+import  { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import {  FileText, LogOut, Share2, Upload } from "lucide-react";
 
-import {  LogOut } from "lucide-react";
 import UploadZone from "../../components/file/UploadZone";
 import FileList from "../../components/file/FileList";
+import MyShareLinks from "../../components/file/MyShareLinks";
 
+type Tab = 'upload' | 'files' | 'shares';
 
 const Dashboard = () => {
       const {user, logout} = useAuth();
+      const [activeTab, setActiveTab] = useState<Tab>('upload');
+
+      const tabs = [
+        {id:'upload', label: 'Upload', icon:Upload},
+        {id:'files', label:'My Files', icon: FileText},
+        {id:'shares', label: 'My Share Links', icon: Share2},
+      ] as const;
 
       return (
     <div className="min-h-screen bg-gray-950 text-white">
@@ -34,26 +43,45 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
+      <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-10">
           <h2 className="text-4xl font-semibold tracking-tight">Dashboard</h2>
-          <p className="text-gray-400 mt-2">Securely upload and share your files</p>
+          <p className="text-gray-400 mt-2">Manage your secure files and shares</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Upload Section */}
-          <div className="lg:col-span-2">
-            <UploadZone />
-          </div>
+        {/* Tabs */}
+        <div className="flex border-b border-gray-800 mb-8">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-3 px-8 py-4 font-medium transition-all border-b-2 -mb-px ${
+                  isActive 
+                    ? 'border-blue-500 text-white' 
+                    : 'border-transparent text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                <Icon size={20} />
+                {tab.label}
+              </button>
+            );
+          })}
+        </div>
 
-          {/* My Files Section */}
-          <div className="lg:col-span-3">
-            <FileList />
-          </div>
+        {/* Tab Content */}
+        <div className="min-h-[500px]">
+          {activeTab === 'upload' && <UploadZone />}
+
+          {activeTab === 'files' && <FileList />}
+
+          {activeTab === 'shares' && <MyShareLinks />}
         </div>
       </div>
     </div>
-  );
+  );      
 };
 
 export default Dashboard;

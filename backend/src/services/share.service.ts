@@ -126,7 +126,7 @@ export class ShareService{
                   token:share.token,
                   shareUrl: `${env.NODE_ENV === 'production'
                   ? 'https://yourdomain.com'
-                  : 'http://localhost:5000'}/api/share/download/${token}`,
+                  : 'http://localhost:5000'}/api/share/download/${share.token}`,
                   fileName: share.file.originalName,
                   fileSize: Number(share.file.size),
                   expiresAt: share.expiresAt,
