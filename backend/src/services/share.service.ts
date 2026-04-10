@@ -150,6 +150,22 @@ export class ShareService{
                   isExpired: share.expiresAt ? share.expiresAt < new Date() : false,
             }));
       }
+
+      async revokeShareLink(shareId: string, userId: string): Promise<void>{
+            const shareLink = await prisma.shareLink.findUnique({
+                  where:{id: shareId},
+                  include: {file: true},
+            });
+
+            if(!shareLink || shareLink.file.userId !== userId){
+                  throw new Error('Share link not found or access denied');
+            }
+
+            await prisma.shareLink.update({
+                  where:{id: shareId},
+                  data:{isActive: false},
+            });
+      }
 }
 
 export const shareService = new ShareService();

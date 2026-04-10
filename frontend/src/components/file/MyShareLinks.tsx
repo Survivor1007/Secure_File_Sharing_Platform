@@ -38,6 +38,17 @@ const MyShareLinks = () => {
             });
       };
 
+      const handleRevoke = async (shareId: string) => {
+        if(!confirm('Are you sure you want to revoke this shareLink?'))return;
+      try{
+        await fetchClient(`/share/revoke/${shareId}`, {method:'POST'});
+        setShareLinks(shareLinks.filter(link => link.id !== shareId));
+        alert('Share Link revoked successdully');
+      }catch(err: any){
+        alert(err.message || 'Failed to revoke share link');
+      }
+    };
+
       if(loading){
             return <div className="text-center py-12 text-gray-400">Loading your share Links...</div>
       }

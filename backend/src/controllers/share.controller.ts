@@ -3,6 +3,7 @@ import { shareService, ShareService } from "../services/share.service";
 import { ShareLinkInput } from "../types";
 import path from "path";
 import fs from 'fs';
+import { fileservice } from "../services/file.service";
 
 export class ShareController{
       async createShareLink(req: Request, res: Response){
@@ -104,6 +105,26 @@ export class ShareController{
                   console.error('Get my share link error:', error);
 
                   res.status(500).json({ success: false, message: 'Failed to fetch your share links' });
+            }
+      }
+            
+      async revokeShareLink(req: Request, res: Response){
+            try{
+                  if(!req.user){
+                        return res.status(401).json({success: false, message: 'Unauthorized'});
+                  }
+
+                  const {shareId} = req.params;
+
+                  await shareService.revokeShareLink(shareId, req.user.id);
+
+                  res.json({
+                        success: true,
+                        message: 'Share link revoked successfully',
+                  });
+            }catch(err: any){
+                  console.error('Failed to revoke share link:', err);
+                  res.status(400).json({success:true, message: err.message || 'Failed to revoke share link'});
             }
       }
             
