@@ -67,6 +67,15 @@ Defines API endpoints and maps them to controllers.
 
 ---
 
+### POST /revoke/:token
+
+- Middleware
+  - `authenticateToken`
+- Controller:
+  - `shareController.revokeShareLink`
+
+---
+
 ### GET /download/:token
 
 - Public route

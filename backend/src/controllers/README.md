@@ -123,3 +123,10 @@ Handles HTTP request and response logic.
 - Returns user's created share links
 
 ---
+
+### Revoke Share Link
+- Requires authenticated user
+- Calls `shareService.revokeShareLink`
+- Returns success message
+
+---

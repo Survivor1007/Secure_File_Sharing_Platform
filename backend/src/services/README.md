@@ -147,6 +147,13 @@ The `ShareService` is responsible for secure file sharing and controlled downloa
 
 ---
 
+### Revoke Share Link
+- Fetches the entry with the matching shareId
+- Deactive the share link
+  - `isActive: false`
+
+---
+
 ### Token Handling
 
 - Uses `crypto.randomBytes` for secure token generation
