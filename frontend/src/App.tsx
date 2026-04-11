@@ -3,6 +3,7 @@ import { useAuth } from "./context/AuthContext";
 
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import ChangePassword from "./pages/auth/ChangePassword";
 import Dashboard from "./pages/dashboard/Dashboard";
 
 function App(){
@@ -21,15 +22,36 @@ function App(){
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" replace />} />
-        <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" replace />} />
+        <Route 
+          path="/login" 
+          element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" replace />} 
+        />
+        <Route 
+          path="/register" 
+          element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" replace />} 
+        />
 
         {/* Protected Routes */}
-        <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />} />
+        <Route 
+          path="/dashboard" 
+          element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />} 
+        />
+        <Route 
+          path="/change-password" 
+          element={isAuthenticated ? <ChangePassword /> : <Navigate to="/login" replace />} 
+        />
 
-        {/* Default Route */}
-        <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Default Redirect */}
+        <Route 
+          path="/" 
+          element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} 
+        />
+
+        {/* Catch-all */}
+        <Route 
+          path="*" 
+          element={<Navigate to="/login" replace />} 
+        />
       </Routes>
     </Router>
   );

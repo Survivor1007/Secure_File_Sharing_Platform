@@ -52,10 +52,14 @@ export const AuthProvider = ({children}: {children : ReactNode}) => {
             
             if(data.accessToken){
                   setAccessToken(data.accessToken);
-
-                  const meData = await fetchClient('/auth/me', {method:'GET'});
-                  if(meData.user){
+                  try {
+                        const meData = await fetchClient('/auth/me');
+                        if (meData.user) {
                         setUser(meData.user);
+                        }
+                  } catch (e) {
+                        console.error('Failed to fetch user profile after login');
+                        setUser({ id: 'current', email });
                   }
             }
             

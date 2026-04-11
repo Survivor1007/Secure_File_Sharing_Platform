@@ -6,6 +6,9 @@ export const  setAccessToken = (token : string | null) => {
   currentAccessToken = token;
 }
 
+// List of endpoints that should NOT trigger auto-refresh
+const NO_RETRY_ENDPOINTS = ['/auth/login', '/auth/register', '/auth/refresh', '/auth/me'];
+
 export const fetchClient = async (endpoint:string, options: RequestInit = {}) => {
         
       const isFormData = options.body instanceof FormData;
@@ -21,7 +24,8 @@ export const fetchClient = async (endpoint:string, options: RequestInit = {}) =>
 
       const response = await fetch(`${API_BASE}${endpoint}`, config);
 
-      if(response.status === 401 || response.status=== 403){
+      if((response.status === 401 || response.status=== 403) && 
+      !NO_RETRY_ENDPOINTS.includes(endpoint)){
             try{
               const refreshRes = await fetch('/api/auth/refresh', {
                 method: 'POST',
@@ -34,7 +38,7 @@ export const fetchClient = async (endpoint:string, options: RequestInit = {}) =>
 
                 return fetchClient(endpoint, options);
               }
-            }catch {}
+            }catch(e) {}
       }
           
 
