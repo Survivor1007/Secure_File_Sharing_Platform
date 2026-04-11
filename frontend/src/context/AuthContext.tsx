@@ -27,7 +27,11 @@ export const AuthProvider = ({children}: {children : ReactNode}) => {
                         });
                         if(data.accessToken){
                               setAccessToken(data.accessToken);
-                              setUser({id:'temp', email: 'user@example.com'});
+
+                              const meData = await fetchClient('/auth/me');
+                              if(meData.user){
+                                    setUser(meData.user);
+                              }
                         }
                   }catch(err){
                         setUser(null);
@@ -48,7 +52,11 @@ export const AuthProvider = ({children}: {children : ReactNode}) => {
             
             if(data.accessToken){
                   setAccessToken(data.accessToken);
-                  setUser({id: 'temp', email});
+
+                  const meData = await fetchClient('/auth/me', {method:'GET'});
+                  if(meData.user){
+                        setUser(meData.user);
+                  }
             }
             
       };

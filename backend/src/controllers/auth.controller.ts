@@ -123,6 +123,27 @@ export class AuthController{
                   res.status(400).json({success: false, message:error.message});
             }
       }
+
+      async getCurrentUser(req: Request, res: Response){
+            try{
+                  if(!req.user){
+                  return res.status(401).json({success: false, message:'Unauthorized'});
+                  }
+
+                  const userData = await authService.getCurrentUser(req.user.id);
+
+                  res.json({
+                        success:true,
+                        user: userData,
+                  });
+            }catch(error: any){
+                  res.status(400).json({
+                        success: false,
+                        message:error.message || 'Failed to fetch user profile'
+                  });
+            }
+      
+      }
 }
 
 export const authController =  new AuthController();  
