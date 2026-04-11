@@ -4,6 +4,7 @@ import fetchClient, { downloadFile } from "../../lib/api";
 import { type FileItem } from "../../types";
 import ShareModal from "./ShareModal";
 import Skeleton from "../ui/Skeleton";
+import Toast from "../ui/Toast";
 
 
 
@@ -16,6 +17,7 @@ const FileList = () => {
       } | null>(null);
       const [downloadingId, setDownloadingId] = useState<string | null>(null);
       const [deletingId, setDeleteingId] = useState<string | null>(null);
+      const [toast,setToast] = useState<{message: string; type: 'success' | 'error'} | null>(null);
 
       const fetchFiles = async () => {
             try{
@@ -60,8 +62,10 @@ const FileList = () => {
             
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
+
+            setToast({message: `${originalName} downloaded`, type: 'success'});
         }catch(err :any){
-          throw new Error('Failed to download file. Please try again.');
+          setToast({message: `Failed to downlaod`, type: 'error'});
         }finally{
           setDownloadingId(null);
         }
@@ -77,9 +81,10 @@ const FileList = () => {
         try{
           await fetchClient(`/files/delete/${fileId}`, {method: 'DELETE'});
           setFiles(files.filter(f => f.id !== fileId));
-          alert('File deleted successfully');
+
+          setToast({message: `File deleted successfully`, type: 'success'});
         }catch(err: any){
-          alert(err.message || 'Failed to delete file');
+          setToast({message: err.message || `Failed to delete file`, type: 'error'});
         }finally{
           setDeleteingId(null);
         }
@@ -193,6 +198,13 @@ const FileList = () => {
           isOpen={true}
           onClose={() => setSelectedFileForShare(null)}
         />
+      )}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type = {toast.type}
+          onClose={() => setToast(null)}
+      />
       )}
     </>
   );

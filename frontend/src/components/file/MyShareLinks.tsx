@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import fetchClient from "../../lib/api";
 import { type ShareLink } from "../../types";
 import Skeleton from "../ui/Skeleton";
+import Toast from "../ui/Toast";
 
 
 const MyShareLinks = () => {
@@ -10,6 +11,7 @@ const MyShareLinks = () => {
       const [loading, setLoading] = useState(true);
       const [copiedId,setCopiedId] = useState<string | null>(null);
       const [revokingId,setRevokingId] = useState<string | null>(null);
+      const [toast,setToast] = useState<{message: string; type: 'success' | 'error'} | null>(null);
 
       const fetchShareLinks = async () => {
             try{
@@ -48,9 +50,9 @@ const MyShareLinks = () => {
       try{
         await fetchClient(`/share/revoke/${shareId}`, {method:'POST'});
         setShareLinks(shareLinks.filter(link => link.id !== shareId));
-        alert('Share Link revoked successdully');
+        setToast({message: `Share Link revoked successfully`, type: 'success'});
       }catch(err: any){
-        alert(err.message || 'Failed to revoke share link');
+        setToast({message: err.message || `Failed to downlaod`, type: 'error'});
       }finally{
         setRevokingId(null);
       }
@@ -151,6 +153,13 @@ const MyShareLinks = () => {
           </div>
         ))}
       </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type = {toast.type}
+          onClose={() => setToast(null)}
+      />
+      )}
     </div>
   );
 };

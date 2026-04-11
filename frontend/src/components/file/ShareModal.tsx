@@ -1,7 +1,7 @@
 import { Calendar, Check, Copy, Download, Share2, X } from "lucide-react";
 import React, { useState } from "react";
 import fetchClient from "../../lib/api";
-
+import Toast from "../ui/Toast";
 
 interface ShareModalProps{
       fileId: string;
@@ -16,6 +16,7 @@ const ShareModal = ({fileId, fileName, isOpen, onClose}: ShareModalProps) => {
       const [loading,setLoading] = useState(false);
       const [shareUrl, setShareUrl] = useState<string | null>(null);
       const [copied, setCopied] = useState(false);
+      const [toast, setToast] = useState<{message: string; type: 'success' | 'error'} | null>(null);
 
       if(!isOpen)return null;
 
@@ -33,9 +34,9 @@ const ShareModal = ({fileId, fileName, isOpen, onClose}: ShareModalProps) => {
                   });
 
                   setShareUrl(data.shareLink.shareUrl);
-                  alert('New share link created! All previous links have been disabled');
+                 setToast({message: `Share link generated successfully`, type: 'success'});
             }catch(err: any){
-                  alert(err.message || 'Failed to create the share link');
+                  setToast({message: `Failed to create share link`, type: 'error'});
             }finally{
                   setLoading(false);
             }
@@ -141,6 +142,13 @@ const ShareModal = ({fileId, fileName, isOpen, onClose}: ShareModalProps) => {
           )}
         </div>
       </div>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type = {toast.type}
+          onClose={() => setToast(null)}
+      />
+      )}
     </div>
   );
 };
