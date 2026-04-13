@@ -1,5 +1,12 @@
 # 🔐 Secure File Sharing Platform
 
+
+
+![React](https://img.shields.io/badge/React-Frontend-61DAFB?logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?logo=node.js)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker)
+
 A full-stack secure file sharing system that allows authenticated users to upload files and generate controlled, shareable download links with expiration and access limits.
 
 ---
@@ -32,7 +39,7 @@ Users can upload files, manage them, and generate secure links for sharing with 
 
 ### 🔐 Authentication
 - User registration & login
-- JWT-based authentication (Access + Refresh tokens)
+- JWT-based authentication (Access token + Refresh tokens as cookies)
 - Secure password hashing
 
 ### 📤 File Management
@@ -56,7 +63,7 @@ Users can upload files, manage them, and generate secure links for sharing with 
 - Drag & drop uploads
 - Skeleton loaders
 - Toast notifications
-- Responsive UI with dark mode
+- Responsive UI 
 
 ---
 
@@ -223,9 +230,19 @@ Frontend available at **http://localhost:5173**
 
 ---
 
+
+
 ## 📸 Screenshots
 
-> Add screenshots or GIFs here for better presentation
+
+### Upload File
+![Upload](./screenshots/upload.png)
+
+### My Files
+![Files](./screenshots/my_files.png)
+
+### Share Link
+![Share](./screenshots/share.png)
 
 ---
 
