@@ -1,73 +1,121 @@
-# React + TypeScript + Vite
+# 🔐 Secure File Sharing Platform — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive frontend for a secure file sharing system. Built with React 18 and TypeScript, it lets authenticated users upload, manage, and share files through a clean and intuitive UI.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Tech Stack
 
-## React Compiler
+| Technology | Purpose |
+|---|---|
+| React 18 + TypeScript | UI framework |
+| Vite | Fast build tooling |
+| Tailwind CSS v3 | Styling with full dark mode support |
+| Native Fetch API | Lightweight API communication (no Axios) |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## ✨ Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🔐 Authentication
+- User registration and login
+- Token-based session handling
+- Automatic session refresh via backend integration
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 📤 File Upload
+- Drag & drop file upload
+- File validation feedback
+- Upload progress handling
+- Toast notifications for success/failure
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 📂 My Files
+- View all uploaded files
+- Download and delete files
+- File metadata display (name, size, date)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 🔗 Share Links
+- Generate secure shareable links
+- Configure expiration time and download limits
+- Copy link to clipboard with toast feedback
+
+### 📋 My Share Links
+- View all generated links
+- Revoke active links
+- Track usage (downloads / expiry)
+
+### 🎨 UI/UX
+- Fully responsive design
+- Dark mode support
+- Skeleton loaders for better perceived performance
+- Toast notifications throughout
+
+---
+
+## 📁 Project Structure
+```
+src/
+├── components/     # Reusable UI components
+├── pages/          # Route-level components
+├── context/        # Auth and global state
+├── lib/            # API calls (Fetch-based)
+├── tyoes/          #Define interfaces
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## ⚙️ Setup & Installation
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository
+
+```bash
+git clone <your-repo-url>
+cd frontend
 ```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Run the development server
+
+```bash
+npm run dev
+```
+
+The app will be available at **http://localhost:5173**
+
+---
+
+## 🔌 Backend Dependency
+
+This frontend requires the backend API to be running. Make sure the backend server is up before using the app.
+
+---
+
+## 🧪 Planned Improvements
+
+- [ ] Error boundary handling
+- [ ] Improved accessibility (ARIA support)
+- [ ] Advanced file previews
+- [ ] Optimistic UI updates
+- [ ] Pagination / infinite scrolling
+
+---
+
+## 🧠 Notes
+
+- Uses the **native Fetch API** instead of Axios for a lightweight footprint
+- Designed with a focus on clean UX and responsiveness
+- Built to integrate seamlessly with a secure backend architecture
+
+---
+
+## 👨‍💻 Author
+
+Built as part of a full-stack secure file sharing system, with a focus on:
+
+- Authentication & Authorization
+- Secure file handling
+- Clean UI/UX design
